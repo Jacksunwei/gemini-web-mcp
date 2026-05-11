@@ -52,7 +52,7 @@ Standalone (this repo is itself a one-plugin marketplace):
 Or via the [`Jacksunwei/claude-plugins`](https://github.com/Jacksunwei/claude-plugins) index marketplace:
 
 ```bash
-/plugin marketplace add Jacksunwei/claude-plugins
+/plugin marketplace add jacksunwei/claude-plugins
 /plugin install gemini-web@jacksunwei-claude-plugins
 ```
 
