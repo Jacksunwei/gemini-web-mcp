@@ -53,7 +53,7 @@ Or via the [`Jacksunwei/claude-plugins`](https://github.com/Jacksunwei/claude-pl
 
 ```bash
 /plugin marketplace add Jacksunwei/claude-plugins
-/plugin install gemini-web@claude-plugins
+/plugin install gemini-web@jacksunwei-claude-plugins
 ```
 
 ### Gemini CLI, Codex CLI, Antigravity, and other MCP clients
