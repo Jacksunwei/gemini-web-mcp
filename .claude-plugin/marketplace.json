@@ -1,0 +1,17 @@
+{
+  "name": "gemini-web-mcp",
+  "owner": {
+    "name": "Wei (Jack) Sun"
+  },
+  "metadata": {
+    "description": "Gemini-powered MCP server: web search, URL summarization, and Nano Banana image generation. Works with any MCP client (Claude Code, Gemini CLI, Codex, Antigravity).",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "gemini-web",
+      "source": "./",
+      "description": "Gemini-powered tools: web search, URL summarization, and Nano Banana image generation"
+    }
+  ]
+}
