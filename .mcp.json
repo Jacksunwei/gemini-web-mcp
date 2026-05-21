@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "gemini-web": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--script",
+        "${PLUGIN_ROOT}/server/server.py"
+      ]
+    }
+  }
+}

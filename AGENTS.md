@@ -12,7 +12,7 @@ The repo is also packaged as a **one-plugin Claude Code marketplace** (via the `
 so Claude Code users can install it directly with `/plugin marketplace add Jacksunwei/gemini-web-mcp`. Other MCP clients
 (Gemini CLI, Codex CLI, Antigravity) install the same `server/server.py` via their own config formats — see README.
 It is also packaged as a **one-plugin Codex marketplace** via `.agents/plugins/marketplace.json`, `.codex-plugin/`, and
-inline MCP server config in `.codex-plugin/plugin.json`.
+`.mcp.json`.
 
 ## Architecture
 
@@ -25,8 +25,8 @@ Five coordinating files at the repo root:
    absolute paths. Only consumed by Claude Code.
 3. **`.agents/plugins/marketplace.json`** — Codex marketplace manifest. One entry, `"source.path": "./"`, because the
    repo root is itself the plugin root.
-4. **`.codex-plugin/plugin.json`** — Codex plugin manifest with inline bundled MCP server config. Use `${PLUGIN_ROOT}`
-   for paths into the installed plugin.
+4. **`.codex-plugin/plugin.json`** and **`.mcp.json`** — Codex plugin manifest and bundled MCP server config. Use
+   `${PLUGIN_ROOT}` for paths into the installed plugin.
 5. **`server/server.py`** — the MCP server itself. Uses **PEP 723 inline script metadata** (the `# /// script` block at
    the top) so `uv run --script` auto-installs Python deps on first launch. There is no `pyproject.toml` or
    `requirements.txt` — dependencies live inside the script.

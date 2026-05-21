@@ -105,16 +105,15 @@ GOOGLE_API_KEY = "your-aistudio-key"
 shape as above.
 
 For clients without plugin install prompts, configure auth via env vars (the `GOOGLE_API_KEY` shown above, or Vertex ADC
-— see [Advanced: env-var auth](#advanced-env-var-auth) below). Claude Code and Codex plugin installs can use either env
-vars or the plugin's install-time config fields.
+— see [Advanced: env-var auth](#advanced-env-var-auth) below). Claude Code can use either env vars or the plugin's
+install-time config fields.
 
 ## Configure
 
-**First time:** Claude Code and Codex plugin installs prompt you for the fields below when install-time configuration is
-supported. Fill in the API key (the rest can stay blank for defaults).
+**First time:** Claude Code prompts you for the fields below right after `/plugin install`. Fill in the API key (the rest
+can stay blank for defaults).
 
-**Later:** in Claude Code, run `/plugin`, select **gemini-web**, and edit its config. In Codex, remove and reinstall the
-plugin if the plugin directory UI does not expose editing installed config yet.
+**Later:** to change any setting, run `/plugin`, select **gemini-web**, and edit its config.
 
 | Field                            | Default                          | Notes                                                                                                                   |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
