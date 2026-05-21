@@ -79,10 +79,17 @@ IMAGE_MODEL = _config(
     "image_model", "gemini-3.1-flash-image-preview", "GEMINI_IMAGE_MODEL"
 )
 
-if _USER_API_KEY:
-  client = genai.Client(api_key=_USER_API_KEY, vertexai=False)
-else:
-  client = genai.Client()
+_CLIENT: genai.Client | None = None
+
+
+def _client() -> genai.Client:
+  global _CLIENT
+  if _CLIENT is None:
+    if _USER_API_KEY:
+      _CLIENT = genai.Client(api_key=_USER_API_KEY, vertexai=False)
+    else:
+      _CLIENT = genai.Client()
+  return _CLIENT
 
 
 @mcp.tool()
@@ -102,7 +109,7 @@ async def web_search(query: str) -> str:
     Markdown text: a synthesized answer to the query, followed by a `Sources:`
     section listing the cited URLs.
   """
-  response = await client.aio.models.generate_content(
+  response = await _client().aio.models.generate_content(
       model=MODEL,
       contents=f"Search the web and provide detailed results for: {query}",
       config=types.GenerateContentConfig(
@@ -156,7 +163,7 @@ async def summarize_pages(urls: list[str], focus: str | None = None) -> str:
   page_word = "page" if len(urls) == 1 else "pages"
   prompt = f"Summarize the following {page_word}.{focus_clause}\n{url_lines}"
 
-  response = await client.aio.models.generate_content(
+  response = await _client().aio.models.generate_content(
       model=MODEL,
       contents=prompt,
       config=types.GenerateContentConfig(
@@ -275,7 +282,7 @@ async def generate_image(
         image_size=image_size,
     )
 
-  response = await client.aio.models.generate_content(
+  response = await _client().aio.models.generate_content(
       model=IMAGE_MODEL,
       contents=contents,
       config=types.GenerateContentConfig(
