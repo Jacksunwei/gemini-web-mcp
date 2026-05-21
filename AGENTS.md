@@ -26,7 +26,7 @@ Five coordinating files at the repo root:
 3. **`.agents/plugins/marketplace.json`** — Codex marketplace manifest. One entry, `"source.path": "./"`, because the
    repo root is itself the plugin root.
 4. **`.codex-plugin/plugin.json`** and **`.mcp.json`** — Codex plugin manifest and bundled MCP server config. Use
-   `${PLUGIN_ROOT}` for paths into the installed plugin.
+   plugin-relative paths with `"cwd": "."` in `.mcp.json`; Codex does not substitute `${PLUGIN_ROOT}` there.
 5. **`server/server.py`** — the MCP server itself. Uses **PEP 723 inline script metadata** (the `# /// script` block at
    the top) so `uv run --script` auto-installs Python deps on first launch. There is no `pyproject.toml` or
    `requirements.txt` — dependencies live inside the script.

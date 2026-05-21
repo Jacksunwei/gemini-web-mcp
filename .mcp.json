@@ -5,8 +5,9 @@
       "args": [
         "run",
         "--script",
-        "${PLUGIN_ROOT}/server/server.py"
-      ]
+        "server/server.py"
+      ],
+      "cwd": "."
     }
   }
 }
