@@ -49,11 +49,11 @@ Standalone (this repo is itself a one-plugin marketplace):
 /plugin install gemini-web@gemini-web-mcp
 ```
 
-Or via the [`Jacksunwei/claude-plugins`](https://github.com/Jacksunwei/claude-plugins) index marketplace:
+Or via the [`jacksunwei-marketplace`](https://github.com/Jacksunwei/jacksunwei-marketplace) index marketplace:
 
 ```bash
-/plugin marketplace add jacksunwei/claude-plugins
-/plugin install gemini-web@jacksunwei-claude-plugins
+/plugin marketplace add jacksunwei/jacksunwei-marketplace
+/plugin install gemini-web@jacksunwei-marketplace
 ```
 
 ### Gemini CLI, Codex CLI, Antigravity, and other MCP clients
