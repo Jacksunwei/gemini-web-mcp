@@ -104,15 +104,17 @@ GOOGLE_API_KEY = "your-aistudio-key"
 **Antigravity** — open the Agent Manager → MCP store → "Add Custom Server", and use the same `command` / `args` / `env`
 shape as above.
 
-For all non-Claude-Code clients, configure auth via env vars (the `GOOGLE_API_KEY` shown above, or Vertex ADC — see
-[Advanced: env-var auth](#advanced-env-var-auth) below). Claude Code can use either env vars or the plugin's UI prompt.
+For clients without plugin install prompts, configure auth via env vars (the `GOOGLE_API_KEY` shown above, or Vertex ADC
+— see [Advanced: env-var auth](#advanced-env-var-auth) below). Claude Code and Codex plugin installs can use either env
+vars or the plugin's install-time config fields.
 
-## Configure (Claude Code only)
+## Configure
 
-**First time:** Claude Code prompts you for the fields below right after `/plugin install`. Fill in the API key (the
-rest can stay blank for defaults).
+**First time:** Claude Code and Codex plugin installs prompt you for the fields below when install-time configuration is
+supported. Fill in the API key (the rest can stay blank for defaults).
 
-**Later:** to change any setting, run `/plugin`, select **gemini-web**, and edit its config.
+**Later:** in Claude Code, run `/plugin`, select **gemini-web**, and edit its config. In Codex, remove and reinstall the
+plugin if the plugin directory UI does not expose editing installed config yet.
 
 | Field                            | Default                          | Notes                                                                                                                   |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -125,8 +127,8 @@ rest can stay blank for defaults).
 ## Advanced: env-var auth
 
 If you can't (or don't want to) use the plugin UI for the API key — for example you're on Vertex AI, sharing settings
-across machines, or scripting installs — leave the **Gemini API key** field blank (or skip it entirely on non-Claude-Code
-clients) and set env vars instead. The `google-genai` SDK auto-selects the auth path from your environment:
+across machines, or scripting installs — leave the **Gemini API key** field blank and set env vars instead. The
+`google-genai` SDK auto-selects the auth path from your environment:
 
 **Gemini API key (individual users):**
 
@@ -146,7 +148,7 @@ export GOOGLE_CLOUD_LOCATION=us-central1
 # Vertex AI API must be enabled on the project.
 ```
 
-If both the Claude Code **Gemini API key** plugin field and `GOOGLE_*` env vars are set, the plugin field wins.
+If both the **Gemini API key** plugin field and `GOOGLE_*` env vars are set, the plugin field wins.
 
 ## License
 

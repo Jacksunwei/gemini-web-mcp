@@ -12,7 +12,7 @@ The repo is also packaged as a **one-plugin Claude Code marketplace** (via the `
 so Claude Code users can install it directly with `/plugin marketplace add Jacksunwei/gemini-web-mcp`. Other MCP clients
 (Gemini CLI, Codex CLI, Antigravity) install the same `server/server.py` via their own config formats — see README.
 It is also packaged as a **one-plugin Codex marketplace** via `.agents/plugins/marketplace.json`, `.codex-plugin/`, and
-`.mcp.json`.
+inline MCP server config in `.codex-plugin/plugin.json`.
 
 ## Architecture
 
@@ -25,8 +25,8 @@ Five coordinating files at the repo root:
    absolute paths. Only consumed by Claude Code.
 3. **`.agents/plugins/marketplace.json`** — Codex marketplace manifest. One entry, `"source.path": "./"`, because the
    repo root is itself the plugin root.
-4. **`.codex-plugin/plugin.json`** and **`.mcp.json`** — Codex plugin manifest and bundled MCP server config. Use
-   `${PLUGIN_ROOT}` for paths into the installed plugin.
+4. **`.codex-plugin/plugin.json`** — Codex plugin manifest with inline bundled MCP server config. Use `${PLUGIN_ROOT}`
+   for paths into the installed plugin.
 5. **`server/server.py`** — the MCP server itself. Uses **PEP 723 inline script metadata** (the `# /// script` block at
    the top) so `uv run --script` auto-installs Python deps on first launch. There is no `pyproject.toml` or
    `requirements.txt` — dependencies live inside the script.
@@ -38,14 +38,15 @@ versions, MCP server names, and server paths in sync. The server itself is clien
 
 Auth precedence (server-side):
 
-1. **Claude Code plugin userConfig `gemini_api_key`** (env: `CLAUDE_PLUGIN_OPTION_gemini_api_key`) — when set, the
-   server constructs `genai.Client(api_key=..., vertexai=False)`, hard-overriding any `GOOGLE_*` env vars. Only
-   reachable via Claude Code; other clients use env vars directly.
+1. **Plugin config `gemini_api_key`** (Claude Code `CLAUDE_PLUGIN_OPTION_gemini_api_key`, Codex
+   `CODEX_PLUGIN_OPTION_gemini_api_key` / mapped `GEMINI_API_KEY`) — when set, the server constructs
+   `genai.Client(api_key=..., vertexai=False)`, hard-overriding Vertex AI env vars.
 2. **Otherwise the `google-genai` SDK auto-selects from the environment:**
    - `GOOGLE_API_KEY` set → Gemini API mode (individual users / AI Studio key).
    - `GOOGLE_GENAI_USE_VERTEXAI=true` + `GOOGLE_CLOUD_PROJECT` + ADC → Vertex AI mode (enterprise / Google-internal).
 
-Models are also configured via userConfig in Claude Code (`search_model`, `image_model`) — defaults
+Models are also configured via plugin config or env vars (`search_model` / `GEMINI_SEARCH_MODEL`, `image_model` /
+`GEMINI_IMAGE_MODEL`) — defaults
 `gemini-flash-latest` and `gemini-3.1-flash-image-preview`. The search model **must support both `google_search`
 grounding and the `url_context` tool** — not all Gemini models do.
 

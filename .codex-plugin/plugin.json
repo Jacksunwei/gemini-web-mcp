@@ -19,7 +19,39 @@
     "image-generation",
     "nano-banana"
   ],
-  "mcpServers": "./.mcp.json",
+  "mcpServers": {
+    "gemini-web": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--script",
+        "${PLUGIN_ROOT}/server/server.py"
+      ],
+      "env": {
+        "GEMINI_API_KEY": "${gemini_api_key}",
+        "GEMINI_SEARCH_MODEL": "${search_model}",
+        "GEMINI_IMAGE_MODEL": "${image_model}"
+      }
+    }
+  },
+  "userConfig": {
+    "gemini_api_key": {
+      "type": "string",
+      "title": "Gemini API key",
+      "description": "Optional. AI Studio key from https://aistudio.google.com/apikey. When set, the plugin uses the Gemini API path with this key and ignores any GOOGLE_GENAI_USE_VERTEXAI / GOOGLE_API_KEY env vars. Leave blank to fall back to standard env-var auth.",
+      "sensitive": true
+    },
+    "search_model": {
+      "type": "string",
+      "title": "Search / summarization model",
+      "description": "Optional. Model ID for web_search and summarize_pages. Must support both google_search grounding and the url_context tool. Leave blank for the default (gemini-flash-latest)."
+    },
+    "image_model": {
+      "type": "string",
+      "title": "Image generation model",
+      "description": "Optional. Model ID for generate_image. Leave blank for the default (gemini-3.1-flash-image-preview, a.k.a. Nano Banana 2)."
+    }
+  },
   "interface": {
     "displayName": "Gemini Web",
     "shortDescription": "Search, summarize URLs, and generate images with Gemini.",

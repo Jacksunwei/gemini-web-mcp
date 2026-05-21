@@ -28,14 +28,14 @@ Currently exposes:
   - generate_image: text-to-image via Gemini's "Nano Banana" image model
 
 Auth resolution (highest precedence first):
-  1. Plugin userConfig `gemini_api_key` (env: CLAUDE_PLUGIN_OPTION_gemini_api_key)
+  1. Plugin config `gemini_api_key` (Claude Code, Codex, or mapped env)
      → Gemini API mode with that key, vertexai forced off.
-  2. Otherwise the google-genai SDK reads the environment:
+  2. Otherwise the google-genai SDK reads the standard environment:
      - Vertex AI mode: GOOGLE_GENAI_USE_VERTEXAI=true + GOOGLE_CLOUD_PROJECT
        (+ optional GOOGLE_CLOUD_LOCATION, defaults to us-central1) with ADC
      - Gemini API mode: GOOGLE_API_KEY=<key>
 
-Models are configured via plugin userConfig (set in /plugin):
+Models are configured via plugin config or env vars:
   - search_model (default gemini-flash-latest) — must support both
     google_search grounding and the url_context tool.
   - image_model  (default gemini-3.1-flash-image-preview, a.k.a. Nano
@@ -56,13 +56,28 @@ from mcp.server.fastmcp import FastMCP
 mcp = FastMCP("gemini-web")
 
 
-def _user_config(key: str, default: str = "") -> str:
-  return os.environ.get(f"CLAUDE_PLUGIN_OPTION_{key}", "").strip() or default
+def _env_value(*names: str) -> str:
+  for name in names:
+    value = os.environ.get(name, "").strip()
+    if value and not (value.startswith("${") and value.endswith("}")):
+      return value
+  return ""
 
 
-_USER_API_KEY = _user_config("gemini_api_key")
-MODEL = _user_config("search_model", "gemini-flash-latest")
-IMAGE_MODEL = _user_config("image_model", "gemini-3.1-flash-image-preview")
+def _config(key: str, default: str = "", *env_names: str) -> str:
+  return _env_value(
+      f"CLAUDE_PLUGIN_OPTION_{key}",
+      f"CODEX_PLUGIN_OPTION_{key}",
+      f"PLUGIN_OPTION_{key}",
+      *env_names,
+  ) or default
+
+
+_USER_API_KEY = _config("gemini_api_key", "", "GEMINI_API_KEY")
+MODEL = _config("search_model", "gemini-flash-latest", "GEMINI_SEARCH_MODEL")
+IMAGE_MODEL = _config(
+    "image_model", "gemini-3.1-flash-image-preview", "GEMINI_IMAGE_MODEL"
+)
 
 if _USER_API_KEY:
   client = genai.Client(api_key=_USER_API_KEY, vertexai=False)
