@@ -11,22 +11,28 @@ tools — `web_search` (Gemini's `google_search` grounding), `summarize_pages` (
 The repo is also packaged as a **one-plugin Claude Code marketplace** (via the `.claude-plugin/` directory at the root),
 so Claude Code users can install it directly with `/plugin marketplace add Jacksunwei/gemini-web-mcp`. Other MCP clients
 (Gemini CLI, Codex CLI, Antigravity) install the same `server/server.py` via their own config formats — see README.
+It is also packaged as a **one-plugin Codex marketplace** via `.agents/plugins/marketplace.json`, `.codex-plugin/`, and
+`.mcp.json`.
 
 ## Architecture
 
-Three coordinating files at the repo root:
+Five coordinating files at the repo root:
 
 1. **`.claude-plugin/marketplace.json`** — mini-marketplace manifest. One entry, `"source": "./"`. Only consumed by
    Claude Code; other clients ignore it.
 2. **`.claude-plugin/plugin.json`** — Claude Code plugin manifest. Declares `mcpServers` and `userConfig`. Use
    `${CLAUDE_PLUGIN_ROOT}` for paths into the plugin (e.g. `${CLAUDE_PLUGIN_ROOT}/server/server.py`) — never hardcode
    absolute paths. Only consumed by Claude Code.
-3. **`server/server.py`** — the MCP server itself. Uses **PEP 723 inline script metadata** (the `# /// script` block at
+3. **`.agents/plugins/marketplace.json`** — Codex marketplace manifest. One entry, `"source.path": "./"`, because the
+   repo root is itself the plugin root.
+4. **`.codex-plugin/plugin.json`** and **`.mcp.json`** — Codex plugin manifest and bundled MCP server config. Use
+   `${PLUGIN_ROOT}` for paths into the installed plugin.
+5. **`server/server.py`** — the MCP server itself. Uses **PEP 723 inline script metadata** (the `# /// script` block at
    the top) so `uv run --script` auto-installs Python deps on first launch. There is no `pyproject.toml` or
    `requirements.txt` — dependencies live inside the script.
 
-Editing any of the three Claude-Code-specific files in isolation will usually break Claude Code installation. Keep them
-in sync. The server itself is client-agnostic.
+Editing any plugin metadata file in isolation can break installation for that client. Keep marketplace descriptions,
+versions, MCP server names, and server paths in sync. The server itself is client-agnostic.
 
 ## Auth model
 

@@ -1,0 +1,42 @@
+{
+  "name": "gemini-web",
+  "version": "0.7.0",
+  "description": "Gemini-powered tools: web search, URL summarization, and Nano Banana image generation",
+  "author": {
+    "name": "Wei (Jack) Sun",
+    "url": "https://github.com/Jacksunwei"
+  },
+  "homepage": "https://github.com/Jacksunwei/gemini-web-mcp",
+  "repository": "https://github.com/Jacksunwei/gemini-web-mcp",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mcp",
+    "gemini",
+    "vertex-ai",
+    "google-search",
+    "web-search",
+    "grounding",
+    "image-generation",
+    "nano-banana"
+  ],
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Gemini Web",
+    "shortDescription": "Search, summarize URLs, and generate images with Gemini.",
+    "longDescription": "Gemini-powered MCP tools for real Google Search, multi-page URL summaries, and Nano Banana image generation. Configure GOOGLE_API_KEY for Gemini API auth or Vertex AI environment variables for enterprise auth.",
+    "developerName": "Wei (Jack) Sun",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/Jacksunwei/gemini-web-mcp",
+    "defaultPrompt": [
+      "Use Gemini to search the web for current sources.",
+      "Summarize these URLs with Gemini.",
+      "Generate an image with Nano Banana."
+    ],
+    "brandColor": "#4285F4"
+  }
+}

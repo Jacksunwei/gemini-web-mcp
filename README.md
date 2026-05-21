@@ -82,6 +82,14 @@ Then register the server with your client (substitute your absolute path).
 }
 ```
 
+Or install it as a Codex plugin marketplace:
+
+```bash
+codex plugin marketplace add Jacksunwei/gemini-web-mcp
+```
+
+Then open the Codex plugin directory and install **Gemini Web** from the `gemini-web-mcp` marketplace.
+
 **Codex CLI** — edit `~/.codex/config.toml`:
 
 ```toml
