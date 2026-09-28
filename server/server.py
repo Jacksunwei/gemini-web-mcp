@@ -4,7 +4,7 @@
 # dependencies = [
 #   "google-genai>=1.73.0",
 #   "httpx>=0.27.0",
-#   "mcp[cli]>=1.27.0",
+#   "mcp[cli]>=2.2.0",
 # ]
 # ///
 # Copyright 2026 Wei (Jack) Sun
@@ -51,9 +51,9 @@ from pathlib import Path
 import httpx
 from google import genai
 from google.genai import types
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
-mcp = FastMCP("gemini-web")
+mcp = MCPServer("gemini-web")
 
 
 def _env_value(*names: str) -> str:
