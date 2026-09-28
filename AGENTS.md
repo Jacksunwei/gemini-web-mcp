@@ -4,9 +4,9 @@ Guidance for AI coding agents (Claude Code, Codex CLI, Gemini CLI, Cursor, etc.)
 
 ## Repository purpose
 
-This repo is a **single MCP server** (`gemini-web`) packaged so it can be installed by any MCP client. It exposes three
-tools — `web_search` (Gemini's `google_search` grounding), `summarize_pages` (Gemini's `url_context` tool), and
-`generate_image` (Gemini's "Nano Banana" image model).
+This repo is a **single MCP server** (`gemini-web`) packaged so it can be installed by any MCP client. It exposes four
+tools — `web_search` (Gemini's `google_search` grounding), `summarize_pages` (Gemini's `url_context` tool), `ask`
+(a plain Gemini call, no tools), and `generate_image` (Gemini's "Nano Banana" image model).
 
 The repo is also packaged as a **one-plugin Claude Code marketplace** (via the `.claude-plugin/` directory at the root),
 so Claude Code users can install it directly with `/plugin marketplace add Jacksunwei/gemini-web-mcp`. Other MCP clients

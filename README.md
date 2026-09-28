@@ -1,14 +1,16 @@
 # Gemini Web — MCP Server
 
-![Search, summarize, and generate — three Gemini-powered tools for any MCP client](docs/hero.png)
+![Search, summarize, ask, and generate — four Gemini-powered tools for any MCP client](docs/hero.png)
 
-**Real Google Search, multi-page summaries, and Nano Banana image generation — for any MCP client.**
+**Real Google Search, multi-page summaries, direct questions to Gemini, and Nano Banana image generation — for any MCP
+client.**
 
-Three Gemini-powered MCP tools:
+Four Gemini-powered MCP tools:
 
 - **`web_search`** — real Google Search via Gemini's grounding, with cited source URLs.
 - **`summarize_pages`** — fetch and synthesize up to 20 URLs in a single call (HTML, PDF, JSON, images — up to 34 MB
   each).
+- **`ask`** — ask Gemini directly for a second opinion, an explanation, or a review, with optional context.
 - **`generate_image`** — text-to-image, image editing, and multi-image fusion via Gemini's "Nano Banana" model, saved to
   disk.
 
@@ -27,6 +29,10 @@ Just ask the model. A few examples:
 **`summarize_pages`:**
 
 > Summarize key changes of the paper in \<url>.
+
+**`ask`:**
+
+> Ask Gemini whether this retry logic has any race conditions.
 
 **`generate_image`:**
 
@@ -118,7 +124,7 @@ can stay blank for defaults).
 | Field                            | Default                          | Notes                                                                                                                   |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | **Gemini API key**               | _none_                           | Your [AI Studio key](https://aistudio.google.com/apikey). Stored in your system keychain.                               |
-| **Search / summarization model** | `gemini-flash-latest`            | Used by `web_search` and `summarize_pages`. Must support both `google_search` grounding and the `url_context` tool.     |
+| **Search / summarization model** | `gemini-flash-latest`            | Used by `web_search`, `summarize_pages`, and `ask`. Must support `google_search` grounding and the `url_context` tool.  |
 | **Image generation model**       | `gemini-3.1-flash-image-preview` | Nano Banana 2. Override to `gemini-2.5-flash-image` (GA Nano Banana) or `gemini-3-pro-image-preview` (Nano Banana Pro). |
 
 > Need Vertex AI or env-var auth instead? See [Advanced: env-var auth](#advanced-env-var-auth) below.

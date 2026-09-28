@@ -25,6 +25,7 @@
 Currently exposes:
   - web_search: web search via Gemini's google_search grounding
   - summarize_pages: summarize one or more pages via Gemini's url_context tool
+  - ask: ask Gemini a question directly, without web search
   - generate_image: text-to-image via Gemini's "Nano Banana" image model
 
 Auth resolution (highest precedence first):
@@ -36,8 +37,9 @@ Auth resolution (highest precedence first):
      - Gemini API mode: GOOGLE_API_KEY=<key>
 
 Models are configured via plugin config or env vars:
-  - search_model (default gemini-flash-latest) — must support both
-    google_search grounding and the url_context tool.
+  - search_model (default gemini-flash-latest) — used by web_search,
+    summarize_pages, and ask; must support both google_search grounding and
+    the url_context tool.
   - image_model  (default gemini-3.1-flash-image-preview, a.k.a. Nano
     Banana 2) — must support image output.
 """
@@ -186,6 +188,44 @@ async def summarize_pages(urls: list[str], focus: str | None = None) -> str:
       parts.append(f"- {url} ({status})")
 
   return "\n".join(parts) if parts else "No results found."
+
+
+@mcp.tool()
+async def ask(question: str, context: str | None = None) -> str:
+  """Ask Gemini a question and return its answer, without web search.
+
+  Use this for a second opinion or a different model's take: explaining a
+  concept, reviewing a design or code snippet, brainstorming, or checking
+  reasoning. Answers come from the model's own knowledge, which has a
+  training cutoff — use `web_search` instead when the answer depends on
+  current information.
+
+  Args:
+    question: The question or instruction for Gemini.
+    context: Optional supporting material — code, logs, a draft, prior
+      discussion — that the question refers to. Gemini sees nothing else from
+      the calling conversation, so include everything it needs here.
+
+  Returns:
+    Gemini's answer as markdown text.
+  """
+  contents = question
+  if context:
+    contents = f"{question}\n\n<context>\n{context}\n</context>"
+
+  response = await _client().aio.models.generate_content(
+      model=MODEL,
+      contents=contents,
+  )
+
+  if response.text:
+    return response.text
+
+  candidate = response.candidates[0] if response.candidates else None
+  reason = candidate.finish_reason if candidate else None
+  if reason is None and response.prompt_feedback:
+    reason = response.prompt_feedback.block_reason
+  return f"No answer returned (reason: {reason})." if reason else "No answer returned."
 
 
 async def _load_image_parts(refs: list[str]) -> list[types.Part]:

@@ -1,7 +1,7 @@
 {
   "name": "gemini-web",
-  "version": "0.7.0",
-  "description": "Gemini-powered tools: web search, URL summarization, and Nano Banana image generation",
+  "version": "0.8.0",
+  "description": "Gemini-powered tools: web search, URL summarization, ask Gemini, and Nano Banana image generation",
   "author": {
     "name": "Wei (Jack) Sun"
   },
@@ -28,7 +28,7 @@
     "search_model": {
       "type": "string",
       "title": "Search / summarization model",
-      "description": "Optional. Model ID for web_search and summarize_pages. Must support both google_search grounding and the url_context tool. Leave blank for the default (gemini-flash-latest)."
+      "description": "Optional. Model ID for web_search, summarize_pages, and ask. Must support both google_search grounding and the url_context tool. Leave blank for the default (gemini-flash-latest)."
     },
     "image_model": {
       "type": "string",
