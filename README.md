@@ -125,7 +125,7 @@ can stay blank for defaults).
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | **Gemini API key**               | _none_                           | Your [AI Studio key](https://aistudio.google.com/apikey). Stored in your system keychain.                               |
 | **Search / summarization model** | `gemini-flash-latest`            | Used by `web_search`, `summarize_pages`, and `ask`. Must support `google_search` grounding and the `url_context` tool.  |
-| **Image generation model**       | `gemini-3.1-flash-image-preview` | Nano Banana 2. Override to `gemini-2.5-flash-image` (GA Nano Banana) or `gemini-3-pro-image-preview` (Nano Banana Pro). |
+| **Image generation model**       | `gemini-3.1-flash-image`         | Nano Banana 2. Or use `gemini-3-pro-image` (Nano Banana Pro) or `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite).     |
 
 > Need Vertex AI or env-var auth instead? See [Advanced: env-var auth](#advanced-env-var-auth) below.
 

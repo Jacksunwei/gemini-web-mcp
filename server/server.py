@@ -40,8 +40,8 @@ Models are configured via plugin config or env vars:
   - search_model (default gemini-flash-latest) — used by web_search,
     summarize_pages, and ask; must support both google_search grounding and
     the url_context tool.
-  - image_model  (default gemini-3.1-flash-image-preview, a.k.a. Nano
-    Banana 2) — must support image output.
+  - image_model  (default gemini-3.1-flash-image, a.k.a. Nano Banana 2) —
+    must support image output.
 """
 
 import mimetypes
@@ -78,7 +78,7 @@ def _config(key: str, default: str = "", *env_names: str) -> str:
 _USER_API_KEY = _config("gemini_api_key", "", "GEMINI_API_KEY")
 MODEL = _config("search_model", "gemini-flash-latest", "GEMINI_SEARCH_MODEL")
 IMAGE_MODEL = _config(
-    "image_model", "gemini-3.1-flash-image-preview", "GEMINI_IMAGE_MODEL"
+    "image_model", "gemini-3.1-flash-image", "GEMINI_IMAGE_MODEL"
 )
 
 _CLIENT: genai.Client | None = None
@@ -273,7 +273,7 @@ async def generate_image(
 ) -> str:
   """Generate, edit, or compose an image with Gemini's "Nano Banana" image model.
 
-  Defaults to `gemini-3.1-flash-image-preview` (Nano Banana 2) — a native
+  Defaults to `gemini-3.1-flash-image` (Nano Banana 2) — a native
   multimodal image model with strong prompt adherence, in-image text
   rendering, and up to 4K output. Every image carries an invisible SynthID
   watermark.

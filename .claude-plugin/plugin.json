@@ -33,7 +33,7 @@
     "image_model": {
       "type": "string",
       "title": "Image generation model",
-      "description": "Optional. Model ID for generate_image. Leave blank for the default (gemini-3.1-flash-image-preview, a.k.a. Nano Banana 2)."
+      "description": "Optional. Model ID for generate_image. Leave blank for the default (gemini-3.1-flash-image, a.k.a. Nano Banana 2)."
     }
   },
   "mcpServers": {

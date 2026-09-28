@@ -47,7 +47,7 @@ Auth precedence (server-side):
 
 Models are also configured via plugin config or env vars (`search_model` / `GEMINI_SEARCH_MODEL`, `image_model` /
 `GEMINI_IMAGE_MODEL`) — defaults
-`gemini-flash-latest` and `gemini-3.1-flash-image-preview`. The search model **must support both `google_search`
+`gemini-flash-latest` and `gemini-3.1-flash-image`. The search model **must support both `google_search`
 grounding and the `url_context` tool** — not all Gemini models do.
 
 ## Common commands
