@@ -44,6 +44,7 @@ Models are configured via plugin config or env vars:
     must support image output.
 """
 
+import functools
 import mimetypes
 import os
 import tempfile
@@ -52,8 +53,10 @@ from pathlib import Path
 
 import httpx
 from google import genai
+from google.genai import errors as genai_errors
 from google.genai import types
 from mcp.server.mcpserver import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 
 mcp = MCPServer("gemini-web")
 
@@ -94,7 +97,27 @@ def _client() -> genai.Client:
   return _CLIENT
 
 
-@mcp.tool()
+def _tool(fn):
+  """Register `fn` as an MCP tool whose expected failures reach the client.
+
+  mcp 2 replaces the message of any exception other than ToolError with a bare
+  "Error executing tool <name>", which hides Gemini API errors (overload,
+  unsupported thinking level) and bad-input errors from the caller.
+  """
+
+  @functools.wraps(fn)
+  async def wrapper(*args, **kwargs):
+    try:
+      return await fn(*args, **kwargs)
+    except genai_errors.APIError as e:
+      raise ToolError(f"Gemini API error {e.code} {e.status}: {e.message}") from e
+    except (httpx.HTTPError, OSError, ValueError) as e:
+      raise ToolError(str(e)) from e
+
+  return mcp.tool()(wrapper)
+
+
+@_tool
 async def web_search(query: str) -> str:
   """Search the web for current information, returning a synthesized answer with cited sources.
 
@@ -135,7 +158,7 @@ async def web_search(query: str) -> str:
   return "\n".join(parts) if parts else "No results found."
 
 
-@mcp.tool()
+@_tool
 async def summarize_pages(urls: list[str], focus: str | None = None) -> str:
   """Summarize one or more web pages by URL using Gemini's URL Context tool.
 
@@ -190,7 +213,7 @@ async def summarize_pages(urls: list[str], focus: str | None = None) -> str:
   return "\n".join(parts) if parts else "No results found."
 
 
-@mcp.tool()
+@_tool
 async def ask(question: str, context: str | None = None) -> str:
   """Ask Gemini a question and return its answer, without web search.
 
@@ -263,7 +286,7 @@ async def _load_image_parts(refs: list[str]) -> list[types.Part]:
   return parts
 
 
-@mcp.tool()
+@_tool
 async def generate_image(
     prompt: str,
     input_images: list[str] | None = None,
