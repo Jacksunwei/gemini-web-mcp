@@ -10,7 +10,8 @@ Four Gemini-powered MCP tools:
 - **`web_search`** — real Google Search via Gemini's grounding, with cited source URLs.
 - **`summarize_pages`** — fetch and synthesize up to 20 URLs in a single call (HTML, PDF, JSON, images — up to 34 MB
   each).
-- **`ask`** — ask Gemini directly for a second opinion, an explanation, or a review, with optional context.
+- **`ask`** — ask Gemini for a second opinion, an explanation, or a review, with optional context and thinking level;
+  Gemini searches the web on its own when that improves the answer.
 - **`generate_image`** — text-to-image, image editing, and multi-image fusion via Gemini's "Nano Banana" model, saved to
   disk.
 

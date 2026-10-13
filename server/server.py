@@ -25,7 +25,7 @@
 Currently exposes:
   - web_search: web search via Gemini's google_search grounding
   - summarize_pages: summarize one or more pages via Gemini's url_context tool
-  - ask: ask Gemini a question directly, without web search
+  - ask: ask Gemini a question, letting it search the web when useful
   - generate_image: text-to-image via Gemini's "Nano Banana" image model
 
 Auth resolution (highest precedence first):
@@ -50,6 +50,7 @@ import os
 import tempfile
 import time
 from pathlib import Path
+from typing import Literal
 
 import httpx
 from google import genai
@@ -145,17 +146,23 @@ async def web_search(query: str) -> str:
   parts = []
   if response.text:
     parts.append(response.text)
+  parts.extend(_grounding_sources(response))
 
+  return "\n".join(parts) if parts else "No results found."
+
+
+def _grounding_sources(response: types.GenerateContentResponse) -> list[str]:
+  """Format google_search grounding chunks as a markdown `Sources:` section."""
   candidate = response.candidates[0] if response.candidates else None
   grounding = candidate.grounding_metadata if candidate else None
   chunks = grounding.grounding_chunks if grounding else None
-  if chunks:
-    parts.append("\nSources:")
-    for chunk in chunks:
-      if chunk.web:
-        parts.append(f"- [{chunk.web.title}]({chunk.web.uri})")
-
-  return "\n".join(parts) if parts else "No results found."
+  if not chunks:
+    return []
+  lines = ["\nSources:"]
+  for chunk in chunks:
+    if chunk.web:
+      lines.append(f"- [{chunk.web.title}]({chunk.web.uri})")
+  return lines
 
 
 @_tool
@@ -214,35 +221,51 @@ async def summarize_pages(urls: list[str], focus: str | None = None) -> str:
 
 
 @_tool
-async def ask(question: str, context: str | None = None) -> str:
-  """Ask Gemini a question and return its answer, without web search.
+async def ask(
+    question: str,
+    context: str | None = None,
+    thinking_level: Literal["minimal", "low", "medium", "high"] | None = None,
+) -> str:
+  """Ask Gemini a question and return its answer.
 
   Use this for a second opinion or a different model's take: explaining a
   concept, reviewing a design or code snippet, brainstorming, or checking
-  reasoning. Answers come from the model's own knowledge, which has a
-  training cutoff — use `web_search` instead when the answer depends on
-  current information.
+  reasoning. Gemini answers from its own knowledge and decides for itself
+  whether to run a Google Search to improve the answer. Use `web_search`
+  instead when you want a search-first answer about current information.
 
   Args:
     question: The question or instruction for Gemini.
     context: Optional supporting material — code, logs, a draft, prior
       discussion — that the question refers to. Gemini sees nothing else from
       the calling conversation, so include everything it needs here.
+    thinking_level: Optional reasoning effort. Omit to use the model's
+      default. Higher levels answer hard questions better but take longer.
+      Supported levels vary by model; an unsupported one returns an error.
 
   Returns:
-    Gemini's answer as markdown text.
+    Markdown text: Gemini's answer, followed by a `Sources:` section listing
+    the cited URLs when it searched the web.
   """
   contents = question
   if context:
     contents = f"{question}\n\n<context>\n{context}\n</context>"
 
+  thinking_config = None
+  if thinking_level:
+    thinking_config = types.ThinkingConfig(thinking_level=thinking_level.upper())
+
   response = await _client().aio.models.generate_content(
       model=MODEL,
       contents=contents,
+      config=types.GenerateContentConfig(
+          tools=[types.Tool(google_search=types.GoogleSearch())],
+          thinking_config=thinking_config,
+      ),
   )
 
   if response.text:
-    return response.text
+    return "\n".join([response.text, *_grounding_sources(response)])
 
   candidate = response.candidates[0] if response.candidates else None
   reason = candidate.finish_reason if candidate else None

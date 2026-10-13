@@ -1,6 +1,6 @@
 {
   "name": "gemini-web",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Gemini-powered tools: web search, URL summarization, ask Gemini, and Nano Banana image generation",
   "author": {
     "name": "Wei (Jack) Sun"
